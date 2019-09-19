@@ -16,10 +16,10 @@ public class AppTest
 
     @Test
     public void shoulCalcIntegral() {
-    	double expected = 16.666666666666668;
-    	UnivariateFunction function = v -> v;
-		UnivariateIntegrator integrator = new SimpsonIntegrator(1.0e-12, 1.0e-8, 1, 32);
-		double i = integrator.integrate(100, function, 0, 10);
-		assertTrue(i == expected);
+        double expected = 16.666666666666668;
+        UnivariateFunction function = v -> v;
+        UnivariateIntegrator integrator = new SimpsonIntegrator(1.0e-12, 1.0e-8, 1, 32);
+        double i = integrator.integrate(100, function, 0, 10);
+        assertTrue(i == expected);
     }
 }
