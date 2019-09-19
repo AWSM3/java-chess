@@ -28,7 +28,7 @@ import java.util.List;
  */
 public class Board {
 	private int size;
-	private BoardPoint[][] points;
+	private final BoardPoint[][] points;
 
 	public Board(int size) {
 		this.size = size;
