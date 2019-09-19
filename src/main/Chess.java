@@ -1,7 +1,8 @@
 import com.lanit.chess.*;
 
 import com.lanit.chess.board.Board;
-import com.lanit.chess.player.*;
+import com.lanit.chess.player.Player;
+import com.lanit.chess.Color;
 
 /**
  * - не учитывается ход пешки из начальной позиции на две клетки
@@ -13,6 +14,6 @@ public class Chess {
 	public static void main(String[] args) {
 		Board board = new Board(BOARD_SIZE);
 		
-		new Gamer(board, new WhitePlayer(), new BlackPlayer()).run();
+		new Gamer(board, new Player(Color.WHITE), new Player(Color.BLACK)).run();
 	}
 }

@@ -16,21 +16,21 @@ public class Mover {
 		this.board = board;
 	}
 	
-	public void initMoves(Player player) {
-		while(!this.reachMaximumUselessMoves()) {
+	public void move(Player player) throws ReachMaximumUselessMovesException, KingIsEatenException {
+		while(!reachMaximumUselessMoves()) {
 			try {
-				if (!player.hasPieces()) {
+				if (!this.board.playerHasPieces(player)) {
 					break;
 				}
 
-				BoardPoint point = player.getRandomPoint();
+				BoardPoint point = this.board.getRandomPoint(player.getColor(), true);
 
 				// двигаем рандомную фигуру игрока стоящую на конкретной клетке
-				Chessman eatenPiece = this.movePiece(point);
+				Chessman eatenPiece = movePiece(point);
 				if (eatenPiece != null) {
-					this.resetMoves();
+					resetMoves();
 				}
-				this.incrementMoves();
+				incrementMoves();
 				// ход успешен, выходим
 				break;
 			} catch (PieceDoesnHaveAvailableMovesException e) {
@@ -39,16 +39,15 @@ public class Mover {
 			}
 		}
 
-		if (this.reachMaximumUselessMoves()) {
+		if (reachMaximumUselessMoves()) {
 			throw new ReachMaximumUselessMovesException();
 		}
 	}
 
-	protected Chessman movePiece(BoardPoint point) {
+	protected Chessman movePiece(BoardPoint point) throws KingIsEatenException, PieceDoesnHaveAvailableMovesException {
 		// получим случайный доступный ход для фигуры
 		Move move = point.getPiece().getMoveFrom(point.getX(), point.getY(), this.board.getSize() - 1);
 		
-		try {	
 			// используя доску попробуем двинуть фигуру по координатам
 			Chessman piece = point.getPiece();
 			BoardPoint targetPoint = this.board.getPoint(move.getX(), move.getY());
@@ -57,7 +56,8 @@ public class Mover {
 
 			// проверим наличие союзника на клетке
 			if (targetPoint.hasAlly(piece)) {
-				throw new CantMoveToAllyException();
+				// попытка сходить на клетку своего союзника
+				throw new PieceDoesnHaveAvailableMovesException(point.getPiece());
 			}
 
 			// проверим, является ли таргет королём
@@ -75,10 +75,6 @@ public class Mover {
 			}
 
 			return targetPiece;
-		} catch (CantMoveToAllyException e) {
-			// попытка сходить на клетку своего союзника
-			throw new PieceDoesnHaveAvailableMovesException(point.getPiece());
-		}
 	}
 
 	protected void incrementMoves() {

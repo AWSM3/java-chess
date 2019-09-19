@@ -14,13 +14,13 @@ public class Pawn extends Chessman {
 	}
 
 	public String getIcon() {
-		return this.getColor() == Color.WHITE ? "♙" : "♟";
+		return getColor() == Color.WHITE ? "♙" : "♟";
 	}
 	
-	public Move getMoveFrom(int x, int y, int max) {
+	public Move getMoveFrom(int x, int y, int max) throws PieceDoesnHaveAvailableMovesException {
 		int newX = x + Randomizer.generate(-1, 1); // смещение по горизонтали
 		int newY = y;
-		if (this.getColor() == Color.WHITE) {
+		if (getColor() == Color.WHITE) {
 			// ходим вверх
 			newY += 1;
 		} else {

@@ -3,6 +3,11 @@ package com.lanit.chess.board;
 import com.lanit.chess.Color;
 import com.lanit.chess.InvalidChessPieceLogicException;
 import com.lanit.chess.piece.*;
+import com.lanit.chess.player.Player;
+import com.lanit.chess.util.Randomizer;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  *   x: 0 1 2 3 4 5 6 7
@@ -28,7 +33,7 @@ public class Board {
 	public Board(int size) {
 		this.size = size;
 		this.points = new BoardPoint[size][size];
-		this.initPieces();
+		initPieces();
 	}
 
 	public int getSize() {
@@ -36,11 +41,11 @@ public class Board {
 	}
 
 	public void initPieces() {
-		for(int i = 0; i < this.getSize(); i++) {
-    		for(int j = 0; j < this.getSize(); j++) {
+		for(int i = 0; i < getSize(); i++) {
+    		for(int j = 0; j < getSize(); j++) {
     			Chessman piece = null;
     			try {
-    				piece = this.getDefaultPieceByCoordinate(i, j);
+    				piece = getDefaultPieceByCoordinate(i, j);
     			} catch (InvalidChessPieceLogicException e) {}
 
 	    		this.points[i][j] = new BoardPoint(i, j, piece);
@@ -52,35 +57,53 @@ public class Board {
 		return this.points;
 	}
 
-	public BoardPoint[] getPointsFlat() {
-        BoardPoint[] result = new BoardPoint[this.getSize() * this.getSize()];
-        int index = 0;
-        for (int i = 0; i < this.size; i++) {
-            for (int j = 0; j < this.size; j++) {
-                result[index++] = this.points[i][j];
-            }
-        }
+	public BoardPoint getRandomPoint(Color color, boolean withPiece) {
+		BoardPoint point = getPoint(Randomizer.generate(0, getSize() - 1), Randomizer.generate(0, getSize() - 1));
+		if (point.getPiece() != null && point.getPiece().getColor() == color) {
+			if (withPiece && point.getPiece() != null) {	
+				return point;
+			}
+		}
 
-        return result;
-    }
+		return getRandomPoint(color, withPiece);
+	}
 
-	private Chessman getDefaultPieceByCoordinate(int x, int y) {
+	public ArrayList getPlayerPieces(Player player) {
+		ArrayList<BoardPoint> points = new ArrayList<>();
+
+		for(int i = 0; i < getSize(); i++) {
+    		for(int j = 0; j < getSize(); j++) {
+	    		BoardPoint point = this.points[i][j];
+	    		if (point.getPiece() != null && point.getPiece().getColor() == player.getColor()) {
+	    			points.add(point);
+	    		}
+    		}
+		}
+
+		return points;
+	}
+
+	public boolean playerHasPieces(Player player) {
+		return getPlayerPieces(player).size() > 0;
+	}
+
+	private Chessman getDefaultPieceByCoordinate(int x, int y) throws InvalidChessPieceLogicException {
 		Color color = y <= 1 ? Color.WHITE : Color.BLACK;
 
 		// низ/верх доски
-		if(y == 0 || y == this.getSize() - 1) {
+		if(y == 0 || y == getSize() - 1) {
 			// ладья, начало или конец линии 
-			if (x == 0 || x == this.getSize() - 1) {
+			if (x == 0 || x == getSize() - 1) {
 				return new Rook(color);
 			}
 
 			// конь, вторая клетка с начала/конца линии
-			if(x == 1 || x == this.getSize() - 2) {
+			if(x == 1 || x == getSize() - 2) {
 				return new Horse(color);
 			}
 
 			// слон, третья клетка с начала/конца линии
-			if(x == 2 || x == this.getSize() - 3) {
+			if(x == 2 || x == getSize() - 3) {
 				return new Elephant(color);
 			}
 
@@ -96,7 +119,7 @@ public class Board {
 		}
 
 		// пешка, ибо второй ряд (снизу и сверху), `x` не важен
-		if(y == 1 || y == this.getSize() - 2) {
+		if(y == 1 || y == getSize() - 2) {
 			return new Pawn(color);
 		}
 

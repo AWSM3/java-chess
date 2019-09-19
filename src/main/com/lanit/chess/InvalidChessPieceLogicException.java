@@ -1,5 +1,5 @@
 package com.lanit.chess;
 
-import java.lang.RuntimeException;
+import java.lang.Exception;
 
-public class InvalidChessPieceLogicException extends RuntimeException {}
+public class InvalidChessPieceLogicException extends Exception {}

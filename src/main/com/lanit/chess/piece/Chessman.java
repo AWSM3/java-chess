@@ -1,6 +1,7 @@
 package com.lanit.chess.piece;
 
 import com.lanit.chess.Color;
+import com.lanit.chess.PieceDoesnHaveAvailableMovesException;
 
 public abstract class Chessman {
 	private Color color;
@@ -17,5 +18,5 @@ public abstract class Chessman {
 
 	abstract public String getIcon();
 
-	abstract public Move getMoveFrom(int x, int y, int max);
+	abstract public Move getMoveFrom(int x, int y, int max) throws PieceDoesnHaveAvailableMovesException;
 }

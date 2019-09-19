@@ -1,9 +1,9 @@
 package com.lanit.chess;
 
-import java.lang.RuntimeException;
+import java.lang.Exception;
 import com.lanit.chess.piece.Chessman;
 
-public class PieceDoesnHaveAvailableMovesException extends RuntimeException {
+public class PieceDoesnHaveAvailableMovesException extends Exception {
 	private Chessman piece;
 
 	public PieceDoesnHaveAvailableMovesException(Chessman piece) {

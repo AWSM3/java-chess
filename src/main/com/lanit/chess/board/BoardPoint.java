@@ -39,15 +39,15 @@ public class BoardPoint {
 		return this.piece;
 	}
 
+	public void setPiece(Chessman piece) {
+		this.piece = piece;
+	}
+
 	public boolean hasAlly(Chessman current) {
-		return this.getPiece() != null && this.getPiece().getColor() == current.getColor();
+		return getPiece() != null && getPiece().getColor() == current.getColor();
 	}
 
 	public boolean hasEnemy(Chessman current) {
-		return this.getPiece() != null && this.getPiece().getColor() != current.getColor();
-	}
-
-	public void setPiece(Chessman piece) {
-		this.piece = piece;
+		return getPiece() != null && getPiece().getColor() != current.getColor();
 	}
 }

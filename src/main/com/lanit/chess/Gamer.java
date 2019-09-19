@@ -1,7 +1,7 @@
 package com.lanit.chess;
 
 import com.lanit.chess.piece.Chessman;
-import com.lanit.chess.player.*;
+import com.lanit.chess.player.Player;
 import com.lanit.chess.board.Board;
 import com.lanit.chess.util.BoardPrinter;
 
@@ -12,7 +12,7 @@ public class Gamer {
 	private Mover mover;
 	private int currentNumberOfMoves;
 
-	public Gamer(Board board, WhitePlayer playerOne, BlackPlayer playerTwo) {
+	public Gamer(Board board, Player playerOne, Player playerTwo) {
 		this.board = board;
 		this.playerOne = playerOne;
 		this.playerTwo = playerTwo;
@@ -20,15 +20,11 @@ public class Gamer {
 	}
 
 	public void run() {
-		// присваиваем поля(фигуры)
-		this.playerOne.setPoints(this.board.getPointsFlat());
-		this.playerTwo.setPoints(this.board.getPointsFlat());
-
 		try {
 			// ходим до тех пор, пока есть фигуры у каждого из игроков
-			while (this.playerOne.hasPieces() && this.playerTwo.hasPieces()) {
-				this.mover.initMoves(this.playerOne);
-				this.mover.initMoves(this.playerTwo);
+			while (this.board.playerHasPieces(this.playerOne) && this.board.playerHasPieces(this.playerTwo)) {
+				this.mover.move(this.playerOne);
+				this.mover.move(this.playerTwo);
 			}
 		} catch (KingIsEatenException e) {
 			Chessman winnerPiece = e.getWinnerPiece();
@@ -38,18 +34,19 @@ public class Gamer {
 				this.playerTwo.lose();
 			}
 		} catch (ReachMaximumUselessMovesException e) {
-			this.endGame("Достигнуто максимальное количество бесполезных ходов");
+			printGameResults("Достигнуто максимальное количество бесполезных ходов");
 			return;
 		}
 
-		this.endGame("победитель " + this.getWinner());
+		printGameResults("победитель " + getWinner());
 	}
 
 	public Player getWinner() {
-		return this.playerTwo.isLoser() && !this.playerOne.isLoser() ? this.playerOne : this.playerTwo;
+		return (this.playerTwo.isLoser() || !this.board.playerHasPieces(this.playerTwo)) 
+			   && (!this.playerOne.isLoser() || this.board.playerHasPieces(this.playerOne)) ? this.playerOne : this.playerTwo;
 	}
 
-	public void endGame(String cause) {
+	public void printGameResults(String cause) {
 		System.out.println(
 			String.format("Игра завершена. Количество сделанных ходов: %s. Причина завершения игры: %s.\n\n", 
 				this.mover.getTotalMoves(), 

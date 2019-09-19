@@ -1,5 +1,5 @@
 package com.lanit.chess;
 
-import java.lang.RuntimeException;
+import java.lang.Exception;
 
-public class ReachMaximumUselessMovesException extends RuntimeException {}
+public class ReachMaximumUselessMovesException extends Exception {}
