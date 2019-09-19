@@ -1,1 +1,5 @@
-.class
+*.class
+
+# Maven
+log/
+target/
