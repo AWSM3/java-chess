@@ -18,6 +18,24 @@
     <maven.compiler.target>1.8</maven.compiler.target>
   </properties>
 
+  <profiles>
+    <profile>
+      <id>default</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <properties>
+        <project.entrypoint>com.lanit.chess.App</project.entrypoint>
+      </properties>
+    </profile>
+    <profile>
+      <id>oversize</id>
+      <properties>
+        <project.entrypoint>com.lanit.chess.AppOversize</project.entrypoint>
+      </properties>
+    </profile>
+  </profiles>
+
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -31,6 +49,7 @@
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-math3</artifactId>
         <version>3.6.1</version>
+        <scope>test</scope>
     </dependency>
   </dependencies>
 
@@ -81,7 +100,7 @@
           <configuration>
             <archive>
               <manifest>
-                <mainClass>com.lanit.chess.App</mainClass>
+                <mainClass>${project.entrypoint}</mainClass>
               </manifest>
             </archive>
             <descriptorRefs>
